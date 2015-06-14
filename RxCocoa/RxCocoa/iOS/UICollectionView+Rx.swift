@@ -13,15 +13,15 @@ import UIKit
 // This cannot be a generic class because of collection view objc runtime that checks for
 // implemented selectors in data source
 public class RxCollectionViewDataSource :  NSObject, UICollectionViewDataSource {
-    public typealias CellFactory = (UICollectionView, NSIndexPath, AnyObject) -> UICollectionViewCell
+    public typealias CellFactory = (UICollectionView, NSIndexPath, Any) -> UICollectionViewCell
     
-    public var items: [AnyObject] {
+    public var items: [Any] {
         get {
             return _items
         }
     }
     
-    var _items: [AnyObject]
+    var _items: [Any]
     
     let cellFactory: CellFactory
     
@@ -94,7 +94,7 @@ extension UICollectionView {
         return RxCollectionViewDelegate()
     }
     
-    public func rx_subscribeItemsTo<E where E: AnyObject>
+    public func rx_subscribeItemsTo<E>
         (dataSource: RxCollectionViewDataSource)
         (source: Observable<[E]>)
         -> Disposable {
@@ -135,7 +135,7 @@ extension UICollectionView {
         return CompositeDisposable(clearDataSource, disposable)
     }
 
-    public func rx_subscribeItemsTo<E where E : AnyObject>
+    public func rx_subscribeItemsTo<E>
         (cellFactory: (UICollectionView, NSIndexPath, E) -> UICollectionViewCell)
         (source: Observable<[E]>)
         -> Disposable {
@@ -147,7 +147,7 @@ extension UICollectionView {
         return self.rx_subscribeItemsTo(dataSource)(source: source)
     }
     
-    public func rx_subscribeItemsWithIdentifierTo<E, Cell where E : AnyObject, Cell : UICollectionViewCell>
+    public func rx_subscribeItemsWithIdentifierTo<E, Cell where Cell : UICollectionViewCell>
         (cellIdentifier: String, configureCell: (UICollectionView, NSIndexPath, E, Cell) -> Void)
         (source: Observable<[E]>)
         -> Disposable {
